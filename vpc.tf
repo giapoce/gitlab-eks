@@ -1,18 +1,18 @@
 variable "region" {
-  default     = "eu-south-1"
+  default     = "eu-west-1"
   description = "AWS region"
 }
 
 provider "aws" {
   version = ">= 2.28.1"
-  region  = "eu-south-1"
+  region  = "eu-west-1"
 }
 
 terraform {
   backend "s3" {
     bucket = "infrastructure-terraform-backend"
     key    = "infrastructure/platform/eks/terraform.tfstate"
-    region = "eu-south-1"
+    region = "eu-west-1"
     dynamodb_table = "infrastructure-terraform-backend"
   }
 }
