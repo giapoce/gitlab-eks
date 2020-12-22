@@ -10,10 +10,9 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "infrastructure-terraform-backend"
-    key    = "infrastructure/platform/eks/terraform.tfstate"
+    bucket = "gitlab-terraform-backend"
+    key    = "infrastructure/eks/terraform.tfstate"
     region = "eu-west-1"
-    dynamodb_table = "infrastructure-terraform-backend"
   }
 }
 
