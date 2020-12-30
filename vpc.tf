@@ -19,15 +19,12 @@ terraform {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "gitlab-test-eks-${random_string.suffix.result}"
+  cluster_name = "gitlab-test-eks"
 }
 
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-}
 
 module "vpc" {
+
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.6.0"
 
@@ -40,7 +37,7 @@ module "vpc" {
   single_nat_gateway   = true
   enable_dns_hostnames = true
 
-  tags = {
+   tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
@@ -53,4 +50,5 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
+
 }

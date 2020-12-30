@@ -9,20 +9,21 @@ module "eks" {
   worker_groups = [
     {
       name                          = "worker-group-1"
-      instance_type                 = "t3.small"
+      instance_type                 = "m5.xlarge"
       additional_userdata           = "echo test"
       asg_desired_capacity          = 2
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     },
     {
       name                          = "worker-group-2"
-      instance_type                 = "t3.medium"
+      instance_type                 = "m5.2xlarge"
       additional_userdata           = "echo test"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
       asg_desired_capacity          = 1
     },
   ]
 }
+
 
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
