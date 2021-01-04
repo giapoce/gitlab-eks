@@ -24,8 +24,18 @@ resource "helm_release" "gitlab" {
 
 
   set {
-    name = "certmanager-issuer.email"
-    value = var.certmanager_issuer_email
+    name = "certmanager.install"
+    value = false
+  }
+
+  set {
+    name = "global.ingress.configureCertmanager"
+    value = false
+  }
+
+  set {
+    name = "global.ingress.tls.secretName"
+    value = "gitlab-secret"
   }
 
 
