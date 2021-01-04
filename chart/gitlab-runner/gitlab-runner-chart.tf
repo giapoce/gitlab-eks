@@ -15,7 +15,7 @@ resource "helm_release" "gitlab-runner" {
 
   set {
     name = "gitlabUrl"
-    value = "https://gitlab.inventia.biz/"
+    value = "https://gitlab.test.com/"
   }
 
   set {
