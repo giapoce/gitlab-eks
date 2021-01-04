@@ -8,8 +8,8 @@ provider "aws" {
   region  = "eu-west-1"
 }
 
-data "aws_route53_zone" "inventiacloud_com" {
-  name = "inventiacloud.com"
+data "aws_route53_zone" "gitlab_test" {
+  name = "gitlab.test"
 }
 
 
@@ -19,7 +19,7 @@ resource "aws_route53_record" "gitlab_address" {
   type = "CNAME"
   ttl = 300
   records = [var.alb_adress]
-  zone_id = data.aws_route53_zone.inventiacloud_com.zone_id
+  zone_id = data.aws_route53_zone.gitlab_test.zone_id
 
 
 }
