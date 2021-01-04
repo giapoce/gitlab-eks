@@ -1,0 +1,78 @@
+stages:
+  - build
+  - staging
+
+variables:
+  DOCKER_REGISTRY: 198373991235.dkr.ecr.eu-west-1.amazonaws.com/gitlab
+  AWS_REGION: eu-west-1
+  EKS_CLUSTER: gitlab-test-eks
+  DEPLOYMENT_NAME: hello-world-2
+  LBL_NAME: $DEPLOYMENT_NAME-lbl
+  APP_NAME: hello-world-2
+  K8S_NAMESPACE: $CI_PROJECT_NAME-$CI_PROJECT_ID-$APP_NAME
+  DOCKER_HOST: tcp://docker:2375
+  API_KEY: 9uG1f4zphZG_GVDzM2qRuFKdsbiZptkg4o:WJDF2X9FtiLirsXkoGBZmg
+  DOMAIN: inventia.biz
+  DNS_ZONE: staging
+
+build:
+  stage: build
+  image: docker:18.09.7
+  services:
+    - docker:18.09.7-dind
+  before_script:
+    - docker info
+    - apk add --no-cache curl jq python py-pip
+    - pip install awscli
+  script:
+    - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+    - docker build -t $DOCKER_REGISTRY:$APP_NAME-latest .
+    - docker push $DOCKER_REGISTRY:$APP_NAME-latest
+  
+.kubectl_config: &kubectl_config
+  - aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER
+
+staging:
+  image: docker.io/sulemanhasib43/eks:latest
+  stage: staging
+  before_script: *kubectl_config
+  script: 
+  
+   - |
+     if [[ `kubectl get namespaces | grep $K8S_NAMESPACE | wc -l` -eq 0 ]]
+      then
+      
+        kubectl create namespace $K8S_NAMESPACE
+        kubectl -n $K8S_NAMESPACE create deployment $DEPLOYMENT_NAME --image=$DOCKER_REGISTRY:$APP_NAME-latest   
+        kubectl -n $K8S_NAMESPACE expose deployment $DEPLOYMENT_NAME --name $LBL_NAME --type LoadBalancer --port 80 --target-port 8000
+        
+        if [[ $? -eq 0 ]]
+        then
+        
+          sleep 10
+          hostname=$(kubectl get svc $LBL_NAME -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[].hostname}')
+          echo $hostname
+
+          curl -X PUT "https://api.godaddy.com/v1/domains/$DOMAIN/records/CNAME/$DNS_ZONE" \
+            -H "accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: sso-key $API_KEY" \
+            -d "[ { \"data\": \"$hostname\",  \"ttl\": 600}]"
+          
+          fi
+
+      else
+   
+        pod=$(kubectl get deployment $DEPLOYMENT_NAME -n $K8S_NAMESPACE -o jsonpath='{.spec.template.spec.containers[].name}')
+        echo $pod
+        kubectl -n $K8S_NAMESPACE set image deployments/$DEPLOYMENT_NAME $pod=$DOCKER_REGISTRY:$APP_NAME-latest
+
+      fi     
+      
+  environment:
+   name: $APP_NAME
+   url: http://$DNS_ZONE.$DOMAIN
+  only:
+   - branches
+  except:
+   - master
