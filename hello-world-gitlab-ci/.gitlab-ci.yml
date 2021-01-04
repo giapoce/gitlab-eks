@@ -12,7 +12,7 @@ variables:
   K8S_NAMESPACE: $CI_PROJECT_NAME-$CI_PROJECT_ID-$APP_NAME
   DOCKER_HOST: tcp://docker:2375
   API_KEY: 9uG1f4zphZG_GVDzM2qRuFKdsbiZptkg4o:WJDF2X9FtiLirsXkoGBZmg
-  DOMAIN: inventia.biz
+  DOMAIN: gitlab-test.com
   DNS_ZONE: staging
 
 build:
