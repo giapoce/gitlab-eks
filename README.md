@@ -72,15 +72,15 @@ $ aws eks --region $(terraform output region) update-kubeconfig --name $(terrafo
 ```
 
 The
-[Kubernetes cluster name](https://github.com/hashicorp/learn-terraform-eks/blob/master/outputs.tf#L26)
-and [region](https://github.com/hashicorp/learn-terraform-eks/blob/master/outputs.tf#L21)
- correspond to the output variables showed after the successful Terraform run.
+[Kubernetes cluster name]
+and [region] correspond to the output variables showed after the successful Terraform run.
 
 You can view these outputs again by running:
 
 ```shell
 $ terraform output
 ```
+
 ### Install gitlab from chart
 ```shell
 terraform plan -var target_namespace=gitlab -var timeout=600s -var gitlab_domain=gitlab.XXXXX.XXX -var certmanager_issuer_email=gianmarcoiapoce@gmail.com -out gitlab-chart.out
@@ -100,7 +100,7 @@ terraform apply "route53.plan"
 kubectl get secret <name>-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo
 ```
 
-### Create a new project from Projects->New Project 
-### Enable auto-devops at project level
-### Configure eks integration, importing
-### the already created cluster
+Create a new project from Projects->New Project 
+Enable auto-devops at project level
+Configure eks integration at project level from Operations->Kubernetes->Connect cluster with certificate->Connect existing cluster
+Create a new enviroment from Operations->Enviroment->New enviroment
