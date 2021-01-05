@@ -102,6 +102,15 @@ kubectl get secret <name>-gitlab-initial-root-password -ojsonpath='{.data.passwo
 ```
 
 ### Create a new project from Projects->New Project 
+
 ### Enable auto-devops at project level
+
 ### Configure eks integration at project level from Operations->Kubernetes->Connect cluster with certificate->Connect existing cluster
+
 ### Create a new enviroment from Operations->Enviroment->New enviroment
+
+### Add a .gitlab-ci.yml file and fill it as shown in ./hello-world-ci/.gitlab-ci.yml
+
+### Run your pipeline
+
+### Test review-apps feature from  Operations->Enviroment->Open Live enviroment

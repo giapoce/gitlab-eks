@@ -51,13 +51,26 @@ staging:
         
           sleep 10
           hostname=$(kubectl get svc $LBL_NAME -n $K8S_NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[].hostname}')
-          echo $hostname
 
-          curl -X PUT "https://api.godaddy.com/v1/domains/$DOMAIN/records/CNAME/$DNS_ZONE" \
-            -H "accept: application/json" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: sso-key $API_KEY" \
-            -d "[ { \"data\": \"$hostname\",  \"ttl\": 600}]"
+          HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name $dns_zone --max-items 1 | jq -r ' .HostedZones | first | .Id')
+
+          STAGING_RECORD_SET=$(aws route53 list-resource-record-sets --hosted-zone-id=$HOSTED_ZONE_ID | jq -r '.ResourceRecordSets[] | select (.Name == "'$DNS_ZONE'.'$DOMAIN'")')
+
+          cat <<-EOF > /tmp/update_r53.json
+          {
+            "Comment": "UPDATE $DNS_ZONE.$DOMAIN",
+            "Changes": [
+             {
+                "Action": "UPSERT",
+                "ResourceRecordSet": $STAGING_RECORD_SET
+             }
+            ]
+          }
+         EOF
+
+           sed -i -r "/\"Value\":/s|(\"Value\":)(.*)|\1 \"$hostname\"|" /tmp/update_r53.json
+
+           aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file:///tmp/update_r53.json          
           
         fi
 
