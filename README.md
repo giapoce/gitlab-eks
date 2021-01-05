@@ -62,7 +62,8 @@ region = eu-west-1
 
 ## Configure kubectl
 
-To configure kubetcl, you need both [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [AWS IAM Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
+To configure kubetcl, you need both [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) 
+and [AWS IAM Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html).
 
 The following command will get the access credentials for your cluster and automatically
 configure `kubectl`.
@@ -100,7 +101,7 @@ terraform apply "route53.plan"
 kubectl get secret <name>-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo
 ```
 
-Create a new project from Projects->New Project 
-Enable auto-devops at project level
-Configure eks integration at project level from Operations->Kubernetes->Connect cluster with certificate->Connect existing cluster
-Create a new enviroment from Operations->Enviroment->New enviroment
+### Create a new project from Projects->New Project 
+### Enable auto-devops at project level
+### Configure eks integration at project level from Operations->Kubernetes->Connect cluster with certificate->Connect existing cluster
+### Create a new enviroment from Operations->Enviroment->New enviroment
