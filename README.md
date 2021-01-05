@@ -88,9 +88,19 @@ terraform apply "gitlab-chart.out"
 
 ```
 
-### Configure route53 dns zone for gitlab and staging
+### Configure route53 dns zone for gitlab
 ```shell
 terraform plan -var alb_adress=a11224f7cac624381b7d79f6c91c1dbd-712701365.eu-west-1.elb.amazonaws.com -var gitlab_domain=gitlab.XXXXX.XXX -out route53.plan
 terraform apply "route53.plan"
 
 ```
+
+### Get gitlab initial credentials to login
+```shell
+kubectl get secret <name>-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo
+```
+
+### Create a new project from Projects->New Project 
+### Enable auto-devops at project level
+### Configure eks integration, importing
+### the already created cluster
