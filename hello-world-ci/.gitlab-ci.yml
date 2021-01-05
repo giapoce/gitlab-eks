@@ -11,7 +11,6 @@ variables:
   APP_NAME: hello-world-2
   K8S_NAMESPACE: $CI_PROJECT_NAME-$CI_PROJECT_ID-$APP_NAME
   DOCKER_HOST: tcp://docker:2375
-  API_KEY: 9uG1f4zphZG_GVDzM2qRuFKdsbiZptkg4o:WJDF2X9FtiLirsXkoGBZmg
   DOMAIN: XXXXXX
   DNS_ZONE: staging
 
