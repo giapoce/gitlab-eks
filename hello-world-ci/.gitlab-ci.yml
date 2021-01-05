@@ -12,7 +12,7 @@ variables:
   K8S_NAMESPACE: $CI_PROJECT_NAME-$CI_PROJECT_ID-$APP_NAME
   DOCKER_HOST: tcp://docker:2375
   API_KEY: 9uG1f4zphZG_GVDzM2qRuFKdsbiZptkg4o:WJDF2X9FtiLirsXkoGBZmg
-  DOMAIN: gitlab-test.com
+  DOMAIN: XXXXXX
   DNS_ZONE: staging
 
 build:
@@ -59,12 +59,11 @@ staging:
             -H "Authorization: sso-key $API_KEY" \
             -d "[ { \"data\": \"$hostname\",  \"ttl\": 600}]"
           
-          fi
+        fi
 
       else
    
         pod=$(kubectl get deployment $DEPLOYMENT_NAME -n $K8S_NAMESPACE -o jsonpath='{.spec.template.spec.containers[].name}')
-        echo $pod
         kubectl -n $K8S_NAMESPACE set image deployments/$DEPLOYMENT_NAME $pod=$DOCKER_REGISTRY:$APP_NAME-latest
 
       fi     

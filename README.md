@@ -81,3 +81,9 @@ You can view these outputs again by running:
 ```shell
 $ terraform output
 ```
+### Install gitlab from chart
+```shell
+terraform plan -var target_namespace=gitlab -var timeout=600s -var gitlab_domain=gitlab.XXXXX.XXX -var certmanager_issuer_email=gianmarcoiapoce@gmail.com -out gitlab-chart.out
+terraform apply "gitlab-chart.out"
+
+```
