@@ -87,3 +87,10 @@ terraform plan -var target_namespace=gitlab -var timeout=600s -var gitlab_domain
 terraform apply "gitlab-chart.out"
 
 ```
+
+### Configure route53 dns zone for gitlab and staging
+```shell
+terraform plan -var alb_adress=a11224f7cac624381b7d79f6c91c1dbd-712701365.eu-west-1.elb.amazonaws.com -var gitlab_domain=gitlab.XXXXX.XXX -out route53.plan
+terraform apply "route53.plan"
+
+```
